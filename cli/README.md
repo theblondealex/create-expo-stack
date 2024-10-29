@@ -1,6 +1,7 @@
 # Create Expo Stack CLI
 
-[![Discord](https://img.shields.io/discord/1173879003191459860?color=%235865F2&label=Discord&logo=discord&logoColor=%23fff)](https://expostack.dev/discord) [![NPM version][npm-image]][npm-url]
+[![Discord](https://img.shields.io/discord/1173879003191459860?color=%235865F2&label=Discord&logo=discord&logoColor=%23fff)](https://expostack.dev/discord)
+[![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
 <p align="center">
@@ -8,7 +9,10 @@
 </p>
 
 <p align="center">
-  Get started by running <code>npx create-expo-stack</code>
+  Get started by running <code>npx create-expo-stack@latest</code>
+
+<p align="center">
+  🎉 Over 50k Expo projects generated using CES! 🎉
 
 ## Sponsors
 
@@ -20,11 +24,17 @@ Support this project by <a href="https://github.com/sponsors/danstepanov" target
 <a href="https://expo.dev/" target="_blank" style="margin: 10px;">
   <img src="https://expostack.dev/expo-logo.svg"  style="border-radius: 50%;">
 </a>
-<a href="https://github.com/derkweijers" target="_blank" style="margin: 10px;">
-  <img src="https://avatars.githubusercontent.com/u/11644998?v=4" height="64" width="64" style="border-radius: 50%;">
-</a>
 <a href="https://paradigmpost.com" target="_blank" style="margin: 10px;">
   <img src="https://expostack.dev/paradigmpost.png" height="64" width="64" style="border-radius: 50%;">
+</a>
+<a href="https://github.com/4ndrs" target="_blank" style="margin: 10px;">
+  <img src="https://avatars.githubusercontent.com/u/31898900?v=4" height="64" width="64" style="border-radius: 50%;">
+</a>
+
+## Past Sponsors
+
+<a href="https://github.com/derkweijers" target="_blank" style="margin: 10px;">
+  <img src="https://avatars.githubusercontent.com/u/11644998?v=4" height="64" width="64" style="border-radius: 50%;">
 </a>
 
 ## Description
@@ -37,19 +47,19 @@ You can also use flags such as `--noInstall`, `--noGit`, and `--default` in orde
 
 To get started, use npx to run the CLI tool. You will be prompted to opt into the features you want to use.
 
-`npx create-expo-stack`
+`npx create-expo-stack@latest`
 
-<img src="https://github.com/danstepanov/create-expo-stack/assets/5482800/e709dd66-cb9b-463c-91f9-b842bb80585c" />
+<img src="https://github.com/roninoss/create-expo-stack/assets/5482800/e709dd66-cb9b-463c-91f9-b842bb80585c" />
 
 ## Tech Stack for the templates
 
-Currently, all of the [templates](https://github.com/danstepanov/create-expo-stack/tree/main/cli/src/templates) use the same versions of the following libraries. Not all of the templates include all of the libraries, but they are all available for use.
+Currently, all of the [templates](https://github.com/roninoss/create-expo-stack/tree/main/cli/src/templates) use the same versions of the following libraries. Not all of the templates include all of the libraries, but they are all available for use.
 
-Each project is generated based on the results of the CLI, on a per-file basis. This approach makes this CLI extremely extendable and easy to use. Common files to all generated projects are stored in the [base template folder](https://github.com/danstepanov/create-expo-stack/tree/main/cli/src/templates/base) while files pertaining to additional packages are stored in the [packages template folder](https://github.com/danstepanov/create-expo-stack/tree/main/cli/src/templates/packages). Beyond adding files, this project makes use of [EJS](https://ejs.co/) in order to manipulate existing files as necessary.
+Each project is generated based on the results of the CLI, on a per-file basis. This approach makes this CLI extremely extendable and easy to use. Common files to all generated projects are stored in the [base template folder](https://github.com/roninoss/create-expo-stack/tree/main/cli/src/templates/base) while files pertaining to additional packages are stored in the [packages template folder](https://github.com/roninoss/create-expo-stack/tree/main/cli/src/templates/packages). Beyond adding files, this project makes use of [EJS](https://ejs.co/) in order to manipulate existing files as necessary.
 
 | Library            | Category            | Version | Description                                    |
 | ------------------ | ------------------- | ------- | ---------------------------------------------- |
-| React Native       | Mobile Framework    | v0.73   | The best cross-platform mobile framework       |
+| React Native       | Mobile Framework    | v0.74   | The best cross-platform mobile framework       |
 | React              | UI Framework        | v18     | The most popular UI framework in the world     |
 | TypeScript         | Language            | v5      | Static typechecking                            |
 | React Navigation   | Navigation          | v6      | Performant and consistent navigation framework |
@@ -61,7 +71,7 @@ Each project is generated based on the results of the CLI, on a per-file basis. 
 | Expo Status Bar    | Status Bar Library  | v1      | Status bar support                             |
 | Expo System UI     | System UI Library   | v2      | System UI support                              |
 | Expo Web Browser   | Web Browser Library | v12     | Open links in the browser                      |
-| NativeWind         | UI Framework        | v4      | Tailwind CSS for React Native                  |
+| NativeWind         | UI Framework        | v4.1    | Tailwind CSS for React Native                  |
 | Restyle            | UI Framework        | v2      | Theme-based styling library for React Native   |
 | Tamagui            | UI Framework        | v1      | Universal UI with a smart optimizing compiler  |
 | Unistyles          | UI Framework        | v2      | Superset of StyleSheet                         |
@@ -76,7 +86,7 @@ If you run into problems or have feedback, first search the issues and discussio
 
 ## Contributing
 
-### [See this guide.](https://github.com/danstepanov/create-expo-stack/blob/main/contributing.md)
+### [See this guide.](https://github.com/roninoss/create-expo-stack/blob/main/contributing.md)
 
 Contributions are welcome! Please open a pull request or an issue if you would like to contribute. There are existing feature requests labeled as `[FR]` in the issues section of this repo.
 
@@ -101,6 +111,13 @@ Thanks go to these wonderful people:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/dannyhw">
+            <img src="https://avatars.githubusercontent.com/u/3481514?v=4" width="100;" alt="dannyhw"/>
+            <br />
+            <sub><b>Daniel Williams</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/hqasmei">
             <img src="https://avatars.githubusercontent.com/u/39573679?v=4" width="100;" alt="hqasmei"/>
             <br />
@@ -119,13 +136,6 @@ Thanks go to these wonderful people:
             <img src="https://avatars.githubusercontent.com/u/55156145?v=4" width="100;" alt="ernestoresende"/>
             <br />
             <sub><b>Ernesto Resende</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/dannyhw">
-            <img src="https://avatars.githubusercontent.com/u/3481514?v=4" width="100;" alt="dannyhw"/>
-            <br />
-            <sub><b>Daniel Williams</b></sub>
         </a>
     </td>
     <td align="center">
@@ -208,10 +218,10 @@ Thanks go to these wonderful people:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/b0iq">
-            <img src="https://avatars.githubusercontent.com/u/106549013?v=4" width="100;" alt="b0iq"/>
+        <a href="https://github.com/coyksdev">
+            <img src="https://avatars.githubusercontent.com/u/19565694?v=4" width="100;" alt="coyksdev"/>
             <br />
-            <sub><b>Null</b></sub>
+            <sub><b>Gerald</b></sub>
         </a>
     </td>
     <td align="center">
@@ -223,31 +233,10 @@ Thanks go to these wonderful people:
     </td></tr>
 <tr>
     <td align="center">
-        <a href="https://github.com/coyksdev">
-            <img src="https://avatars.githubusercontent.com/u/19565694?v=4" width="100;" alt="coyksdev"/>
+        <a href="https://github.com/b0iq">
+            <img src="https://avatars.githubusercontent.com/u/106549013?v=4" width="100;" alt="b0iq"/>
             <br />
-            <sub><b>Gerald</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/andrew-levy">
-            <img src="https://avatars.githubusercontent.com/u/29075740?v=4" width="100;" alt="andrew-levy"/>
-            <br />
-            <sub><b>Andrew Levy</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/gialencar">
-            <img src="https://avatars.githubusercontent.com/u/11895696?v=4" width="100;" alt="gialencar"/>
-            <br />
-            <sub><b>Gilson Alencar</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/mwarger">
-            <img src="https://avatars.githubusercontent.com/u/686823?v=4" width="100;" alt="mwarger"/>
-            <br />
-            <sub><b>Mat Warger</b></sub>
+            <sub><b>Null</b></sub>
         </a>
     </td>
     <td align="center">
@@ -258,13 +247,41 @@ Thanks go to these wonderful people:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/mwarger">
+            <img src="https://avatars.githubusercontent.com/u/686823?v=4" width="100;" alt="mwarger"/>
+            <br />
+            <sub><b>Mat Warger</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/gialencar">
+            <img src="https://avatars.githubusercontent.com/u/11895696?v=4" width="100;" alt="gialencar"/>
+            <br />
+            <sub><b>Gilson Alencar</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/andrew-levy">
+            <img src="https://avatars.githubusercontent.com/u/29075740?v=4" width="100;" alt="andrew-levy"/>
+            <br />
+            <sub><b>Andrew Levy</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/AlejandroGutierrezB">
+            <img src="https://avatars.githubusercontent.com/u/56408597?v=4" width="100;" alt="AlejandroGutierrezB"/>
+            <br />
+            <sub><b>Alejandro Gutierrez Barcenilla</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/debugtheworldbot">
             <img src="https://avatars.githubusercontent.com/u/62830430?v=4" width="100;" alt="debugtheworldbot"/>
             <br />
             <sub><b>Pipizhu</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/bautistaaa">
             <img src="https://avatars.githubusercontent.com/u/3660667?v=4" width="100;" alt="bautistaaa"/>
@@ -280,10 +297,39 @@ Thanks go to these wonderful people:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Viraj-10">
+            <img src="https://avatars.githubusercontent.com/u/66306233?v=4" width="100;" alt="Viraj-10"/>
+            <br />
+            <sub><b>Viraj Joshi</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Hacksore">
             <img src="https://avatars.githubusercontent.com/u/996134?v=4" width="100;" alt="Hacksore"/>
             <br />
             <sub><b>Sean Boult</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/salloom-domani">
+            <img src="https://avatars.githubusercontent.com/u/76164955?v=4" width="100;" alt="salloom-domani"/>
+            <br />
+            <sub><b>Salloom</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/ralacerda">
+            <img src="https://avatars.githubusercontent.com/u/19380403?v=4" width="100;" alt="ralacerda"/>
+            <br />
+            <sub><b>Renato Lacerda</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/imranbarbhuiya">
+            <img src="https://avatars.githubusercontent.com/u/74945038?v=4" width="100;" alt="imranbarbhuiya"/>
+            <br />
+            <sub><b>Parbez</b></sub>
         </a>
     </td>
     <td align="center">
@@ -306,15 +352,15 @@ Thanks go to these wonderful people:
             <br />
             <sub><b>Joar Karlsson</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/boek">
             <img src="https://avatars.githubusercontent.com/u/1250545?v=4" width="100;" alt="boek"/>
             <br />
             <sub><b>Jeff Boek</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/gwenoleR">
             <img src="https://avatars.githubusercontent.com/u/10418241?v=4" width="100;" alt="gwenoleR"/>

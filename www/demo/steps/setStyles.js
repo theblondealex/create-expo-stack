@@ -31,23 +31,18 @@ export async function setStyles(cliResults, navigationSelect) {
   }
 
   if (stylingSelect === "nativewindui") {
-    let selectedComponents = [];
-    selectedComponents = await multiselect({
+    let selectedComponents = await multiselect({
       message: "Which components would you like to explore?",
       options: [
         { value: "action-sheet", label: "Action Sheet" },
         { value: "activity-indicator", label: "Activity Indicator" },
         { value: "activity-view", label: "Activity View" },
-        { value: "alert", label: "Alert" },
         { value: "avatar", label: "Avatar" },
         { value: "bottom-sheet", label: "Bottom Sheet" },
-        { value: "context-menu", label: "Context Menu" },
         { value: "date-picker", label: "Date Picker" },
-        { value: "dropdown-menu", label: "Dropdown Menu" },
         { value: "picker", label: "Picker" },
         { value: "progress-indicator", label: "Progress Indicator" },
         { value: "ratings-indicator", label: "Ratings Indicator" },
-        { value: "segmented-control", label: "Segmented Control" },
         { value: "selectable-text", label: "Selectable Text" },
         { value: "slider", label: "Slider" },
         { value: "text", label: "Text" },
@@ -58,16 +53,12 @@ export async function setStyles(cliResults, navigationSelect) {
         "action-sheet",
         "activity-indicator",
         "activity-view",
-        "alert",
         "avatar",
         "bottom-sheet",
-        "context-menu",
         "date-picker",
-        "dropdown-menu",
         "picker",
         "progress-indicator",
         "ratings-indicator",
-        "segmented-control",
         "selectable-text",
         "slider",
         "text",

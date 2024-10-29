@@ -1,11 +1,11 @@
+import { outro, spinner } from '@clack/prompts';
 import { Toolbox } from 'gluegun/build/types/domain/toolbox';
-
-import { getPackageManager, getPackageManagerRunnerX } from './getPackageManager';
 import { AvailablePackages, CliResults } from '../types';
 import { copyBaseAssets } from './copyBaseAssets';
-import { outro, spinner } from '@clack/prompts';
+import { getPackageManager, getPackageManagerRunnerX } from './getPackageManager';
 import { easConfigure } from './runEasConfigure';
 import { ONLY_ERRORS, runSystemCommand } from './systemCommand';
+import { generateNWUI } from './generateNWUI';
 
 export async function printOutput(
   cliResults: CliResults,
@@ -33,18 +33,21 @@ export async function printOutput(
 
   // check if npm option is set, otherwise set based on what the system is configure to use
   const packageManager = cliResults.flags.packageManager || getPackageManager(toolbox, cliResults);
-  const isYarn = packageManager === 'yarn';
   const isNpm = packageManager === 'npm';
 
-  const runCommand = isNpm ? `${packageManager} run` : packageManager;
+  // seems like all package managers actually support the run command
+  const runCommand = `${packageManager} run`;
+
   const runnerType = getPackageManagerRunnerX(toolbox, cliResults);
 
   if (!options.noInstall && !flags.noInstall) {
     s.start(`Installing dependencies using ${packageManager}...`);
+    // attempt to improve npm install speeds by disabling audit and progress
+    const additionalFlags = packageManager === 'npm' ? '--silent --no-audit --progress=false' : '--silent';
 
     await runSystemCommand({
       toolbox,
-      command: `cd ${projectName} && ${packageManager} install --silent`,
+      command: `cd ${projectName} && ${packageManager} install ${additionalFlags}`,
       stdio: packageManager === 'npm' ? undefined : ONLY_ERRORS,
       errorMessage: 'Error installing dependencies'
     });
@@ -57,7 +60,7 @@ export async function printOutput(
 
     await runSystemCommand({
       toolbox,
-      command: `cd ${projectName} && ${packageManager} ${installCommand} --silent expo@latest`,
+      command: `cd ${projectName} && ${packageManager} ${installCommand} ${additionalFlags} expo@latest`,
       stdio: isNpm ? undefined : ONLY_ERRORS,
       errorMessage: 'Error updating expo'
     });
@@ -68,13 +71,14 @@ export async function printOutput(
 
     await runSystemCommand({
       toolbox,
-      // NOTE yarn dlx is a nightmare so we're using npx :)
-      command: `cd ${projectName} && ${isYarn ? 'npx' : runnerType} expo@latest install --fix`,
+      command: `cd ${projectName} && ${runnerType} expo@latest install --fix`,
       errorMessage: 'Error updating packages',
       stdio: undefined
     });
 
     s.stop('Packages updated!');
+
+    await generateNWUI(cliResults, toolbox);
 
     s.start(`Cleaning up your project...`);
 
@@ -88,7 +92,9 @@ export async function printOutput(
 
     s.stop('Project files formatted!');
   } else {
-    s.start(`No installation found.\nCleaning up your project using ${runnerType}...`);
+    await generateNWUI(cliResults, toolbox);
+
+    s.start(`formatting your project using ${runnerType} prettier...`);
 
     // Running prettier using global runners against the template.
     // Use --no-config to prevent using project's config (that may have plugins/dependencies)
@@ -102,7 +108,7 @@ export async function printOutput(
     s.stop('Project files formatted!');
   }
 
-  if (!options.noGit && !flags.noGit) {
+  if (!options.noGit && !flags.noGit && process.env.NODE_ENV !== 'test') {
     s.start(`Initializing git...`);
     // initialize git repo and add first commit
     // get create expo stack version
@@ -186,7 +192,7 @@ export async function printOutput(
     info(`To build for development:`);
     info(``);
     highlight(`${step}. cd ${projectName}`);
-    if (options.noInstall) highlight(`${++step}. ${packageManager} install`);
+    if (!flags.noInstall) highlight(`${++step}. ${packageManager} install`);
     highlight(`${++step}. eas build --profile=development`);
     highlight(`${++step}. ${runCommand} start`);
 
@@ -197,7 +203,7 @@ export async function printOutput(
     info(`To create a build to share with others:`);
     info(``);
     highlight(`${step}. cd ${projectName}`);
-    if (options.noInstall) highlight(`${++step}. ${packageManager} install`);
+    if (!flags.noInstall) highlight(`${++step}. ${packageManager} install`);
     highlight(`${++step}. eas build --profile=preview`);
 
     info(``);
@@ -207,9 +213,9 @@ export async function printOutput(
     highlight(`eas device:create `);
   } else {
     highlight(`${step}. cd ${projectName}`);
-    if (options.noInstall) highlight(`${++step}. ${packageManager} install`);
+    if (flags.noInstall) highlight(`${++step}. ${packageManager} install`);
     if (stylingPackage.name === 'unistyles' || stylingPackage.name === 'nativewindui') {
-      highlight(`${++step}. npx expo prebuild`);
+      highlight(`${++step}. npx expo prebuild --clean`);
     }
     highlight(`${++step}. ${runCommand} ios`);
   }

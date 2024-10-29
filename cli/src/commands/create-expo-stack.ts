@@ -11,16 +11,19 @@ import {
   runIgnite,
   showHelp
 } from '../utilities';
-import { DEFAULT_APP_NAME, defaultOptions } from '../constants';
+import {
+  bunInstallationError,
+  DEFAULT_APP_NAME,
+  defaultOptions,
+  nativeWindUIOptions,
+  navigationValidationError,
+  projectNameValidationError
+} from '../constants';
 import { CliResults, availablePackages } from '../types';
 import clearStylingPackages from '../utilities/clearStylingPackages';
 import { validateProjectName } from '../utilities/validateProjectName';
 import { cancel, intro, isCancel, text } from '@clack/prompts';
 import clearNavigationPackages from '../utilities/clearNavigationPackages';
-
-const navigationValidationError = `You must pass in either --react-navigation or --expo-router if you want to use the --tabs or --drawer+tabs options`;
-const projectNameValidationError = `A project with the name`;
-const bunInstallationError = 'User cancelled to install recommended version of Bun.';
 
 const command: GluegunCommand = {
   name: 'create-expo-stack',
@@ -36,7 +39,7 @@ const command: GluegunCommand = {
     const printSomethingWentWrong = () => {
       info(`\nOops, something went wrong while creating your project 😢`);
       info(
-        `\nIf this was unexpected, please open an issue: https://github.com/danstepanov/create-expo-stack#reporting-bugs--feedback`
+        `\nIf this was unexpected, please open an issue: https://github.com/roninoss/create-expo-stack#reporting-bugs--feedback`
       );
       info('');
     };
@@ -69,7 +72,9 @@ const command: GluegunCommand = {
         !options.reactnavigation &&
         !options.expoRouter &&
         !options['expo-router'] &&
-        !options.exporouter
+        !options.exporouter &&
+        // nativewindui applies the expo router option by default
+        !options.nativewindui
       ) {
         // throw an error without a stack trace
         throw navigationValidationError;
@@ -119,6 +124,10 @@ const command: GluegunCommand = {
         cliResults.flags.overwrite
       );
     } catch (err: string | any) {
+      if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
+        error(`error: ${err}`);
+      }
+
       if (err === '') {
         // user cancelled/exited the interactive CLI
         return void success(`\nCancelled... 👋 \n`);
@@ -131,8 +140,11 @@ const command: GluegunCommand = {
         return void success(`\nCancelled... 👋 \n`);
       }
 
-      // Delete all files with projectName
-      await removeAsync(cliResults.projectName);
+      // we keep this around so we can check what went wrong
+      if (process.env.NODE_ENV !== 'test') {
+        // Delete all files with projectName
+        await removeAsync(cliResults.projectName);
+      }
 
       printSomethingWentWrong();
       throw err;
@@ -200,38 +212,30 @@ const command: GluegunCommand = {
         } else if (options.nativewindui) {
           cliResults = clearStylingPackages(cliResults);
           cliResults = clearNavigationPackages(cliResults);
+
+          const parsedComponents =
+            options?.selectedComponents
+              ?.split(',')
+              ?.map((c: string) => c.trim())
+              ?.filter((item) => nativeWindUIOptions.includes(item)) ?? [];
+
+          const selectedComponents = parsedComponents.length
+            ? Array.from(new Set([...parsedComponents, 'text']))
+            : nativeWindUIOptions;
+
           cliResults.packages.push({
             name: 'nativewindui',
             type: 'styling',
             options: {
-              selectedComponents: options.blank
-                ? []
-                : [
-                    'action-sheet',
-                    'activity-indicator',
-                    'activity-view',
-                    'alert',
-                    'avatar',
-                    'bottom-sheet',
-                    'context-menu',
-                    'date-picker',
-                    'dropdown-menu',
-                    'picker',
-                    'progress-indicator',
-                    'ratings-indicator',
-                    'segmented-control',
-                    'selectable-text',
-                    'slider',
-                    'text',
-                    'toggle'
-                  ]
+              selectedComponents: options.blank ? ['text'] : selectedComponents
             }
           });
+
           cliResults.packages.push({
             name: 'expo-router',
             type: 'navigation',
             options: {
-              type: 'drawer + tabs'
+              type: options.tabs ? 'tabs' : options['drawer+tabs'] ? 'drawer + tabs' : 'stack'
             }
           });
         } else if (options.tamagui) {
@@ -324,12 +328,40 @@ const command: GluegunCommand = {
 
         // Function that outputs a string given the CLI results and the packageManager. The outputted string should be a command that can be run to recreate the project
         const generateRerunScript = (cliResults: CliResults) => {
-          let script = `npx create-expo-stack ${cliResults.projectName} `;
+          let script = `npx create-expo-stack@latest ${cliResults.projectName} `;
 
-          if (cliResults.packages.length > 0 && cliResults.packages[0].name === 'nativewindui') {
+          const isNativeWindUISelected = cliResults.packages.some((p) => p.name === 'nativewindui');
+
+          if (isNativeWindUISelected) {
             script += '--nativewindui ';
-            if (cliResults.packages[0].options.selectedComponents.length === 0) {
+
+            const nativeWindUIComponents =
+              cliResults.packages.find((p) => p.name === 'nativewindui')?.options.selectedComponents ?? [];
+
+            // we do this to account for older stored config e.g that has selectable text in it
+            const onlyValidComponents = nativeWindUIComponents.filter((c) => nativeWindUIOptions.includes(c));
+
+            if (onlyValidComponents.length === 0) {
               script += '--blank ';
+            } else if (onlyValidComponents.length !== nativeWindUIOptions.length) {
+              script += `--selected-components=${onlyValidComponents.join(',')} `;
+            }
+
+            // this should always be expo router for nwui
+            const chosenNavigationOption = cliResults.packages.find((p) => p.type === 'navigation');
+
+            const hasNavigationPackage = chosenNavigationOption !== undefined;
+
+            const navigationType = chosenNavigationOption.options.type;
+
+            if (hasNavigationPackage) {
+              // NOTE we don't need to add expo-router since its currently getting automatically added with nativewindui
+              // NOTE stack is default so doesn't need to applied.
+              if (navigationType === 'tabs') {
+                script += '--tabs ';
+              } else if (navigationType === 'drawer + tabs') {
+                script += '--drawer+tabs ';
+              }
             }
           } else {
             // Add the packages
@@ -421,17 +453,23 @@ const command: GluegunCommand = {
         await printOutput(cliResults, formattedFiles, toolbox, stylingPackage);
       }
     } catch (err) {
+      if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
+        error(`error: ${err}`);
+      }
+
       if (err === '') {
         // user cancelled/exited the interactive CLI
         return void success(`\nCancelled... 👋 \n`);
       }
 
       if (err.message.includes(bunInstallationError)) {
-        return void success(`\nUser cancelled to install recommended version of Bun... 👋 \n`);
+        return void success(`\nCancelled to install recommended version of Bun.... 👋 \n`);
       }
 
-      // Delete all files with projectName
-      // await removeAsync(cliResults.projectName);
+      if (process.env.NODE_ENV !== 'test') {
+        // Delete all files with projectName
+        await removeAsync(cliResults.projectName);
+      }
 
       printSomethingWentWrong();
       throw err;

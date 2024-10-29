@@ -1,6 +1,7 @@
 import { Toolbox } from 'gluegun/build/types/domain/toolbox';
 import os from 'os';
 import {
+  Analytics,
   AuthenticationSelect,
   AvailablePackages,
   CliResults,
@@ -43,10 +44,6 @@ export function configureProjectFiles(
   }
 
   const packageManager = getPackageManager(toolbox, cliResults);
-  // Add npmrc file if user is using pnpm and expo router
-  if (packageManager === 'pnpm') {
-    baseFiles.push('base/.npmrc.ejs');
-  }
 
   if (stylingPackage?.name === 'nativewindui') {
     let nativewindUIFiles = [
@@ -64,8 +61,7 @@ export function configureProjectFiles(
       'packages/nativewindui/components/HeaderButton.tsx.ejs',
       'packages/nativewindui/components/ScreenContent.tsx.ejs',
       'packages/nativewindui/components/TabBarIcon.tsx.ejs',
-      'packages/nativewindui/components/nativewindui/Text.tsx.ejs',
-      'packages/nativewindui/components/nativewindui/ThemeToggle.tsx.ejs',
+      'packages/nativewindui/components/ThemeToggle.tsx.ejs',
       'packages/nativewindui/lib/useColorScheme.tsx.ejs',
       'packages/nativewindui/lib/useHeaderSearchBar.tsx.ejs',
       'packages/nativewindui/lib/cn.ts.ejs',
@@ -112,59 +108,6 @@ export function configureProjectFiles(
       nativewindUIFiles = [...nativewindUIFiles, ...nativewindUITabsFiles];
     } else if (navigationPackage?.options?.type === 'drawer + tabs') {
       nativewindUIFiles = [...nativewindUIFiles, ...nativewindUIDrawerFiles];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('activity-indicator')) {
-      nativewindUIFiles = [
-        ...nativewindUIFiles,
-        'packages/nativewindui/components/nativewindui/ActivityIndicator.tsx.ejs'
-      ];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('avatar')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Avatar.tsx.ejs'];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('bottom-sheet')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Sheet.tsx.ejs'];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('date-picker')) {
-      nativewindUIFiles = [
-        ...nativewindUIFiles,
-        'packages/nativewindui/components/nativewindui/DatePicker.android.tsx.ejs',
-        'packages/nativewindui/components/nativewindui/DatePicker.tsx.ejs'
-      ];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('dropdown-menu')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Picker.tsx.ejs'];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('picker')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Picker.tsx.ejs'];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('progress-indicator')) {
-      nativewindUIFiles = [
-        ...nativewindUIFiles,
-        'packages/nativewindui/components/nativewindui/ProgressIndicator.tsx.ejs'
-      ];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('segmented-control')) {
-      nativewindUIFiles = [
-        ...nativewindUIFiles,
-        'packages/nativewindui/components/nativewindui/SegmentedControl.tsx.ejs'
-      ];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('slider')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Slider.tsx.ejs'];
-    }
-
-    if (stylingPackage?.options.selectedComponents.includes('toggle')) {
-      nativewindUIFiles = [...nativewindUIFiles, 'packages/nativewindui/components/nativewindui/Toggle.tsx.ejs'];
     }
 
     files = nativewindUIFiles;
@@ -335,7 +278,7 @@ export function configureProjectFiles(
           'packages/expo-router/tabs/app/(tabs)/two.tsx.ejs',
           'packages/expo-router/tabs/app/_layout.tsx.ejs',
           'packages/expo-router/tabs/app/modal.tsx.ejs',
-          'packages/expo-router/stack/app/+not-found.tsx.ejs',
+          'packages/expo-router/tabs/app/+not-found.tsx.ejs',
           'packages/expo-router/tabs/app/+html.tsx.ejs'
         ];
         // add the necessary components for the navigation
@@ -411,6 +354,11 @@ export function configureProjectFiles(
     }
   }
 
+  // Add npmrc file if user is using pnpm
+  if (packageManager === 'pnpm') {
+    files.push('base/.npmrc.ejs');
+  }
+
   const packageManagerVersion = getVersionForPackageManager(cliResults.flags.packageManager);
 
   const cesConfig = {
@@ -452,7 +400,8 @@ export function configureProjectFiles(
     os: os.type(),
     osPlatform: os.platform(),
     osArch: os.arch(),
-    osRelease: os.release()
+    osRelease: os.release(),
+    analytics: analyticsPackage?.name as Analytics
   });
 
   return files;

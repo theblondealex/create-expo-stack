@@ -29,7 +29,15 @@
   },
   "dependencies": {
     <% if (props.stylingPackage?.name === "nativewind" || props.stylingPackage?.name === "nativewindui") { %>
-      "nativewind": "^4.0.1",
+      "nativewind": "latest",
+      <%# This will already be installed if using expo-router (see below) %>
+      <% if (props.navigationPackage?.name !== "expo-router") { %>
+        "react-native-reanimated": "~3.10.1",
+      <% } %>
+      <%# This will already be installed if using navigation (see below) %>
+      <% if (props.navigationPackage?.type !== "navigation") { %>
+        "react-native-safe-area-context": "4.10.5",
+      <% } %>
     <% } %>
     <% if (props.stylingPackage?.name === "nativewindui") { %>
       "@roninoss/icons": "^0.0.4",
@@ -38,15 +46,10 @@
       "clsx": "^2.1.0",
       "expo-navigation-bar": "~3.0.4",
       "tailwind-merge": "^2.2.1",
-      <% if (props.stylingPackage?.options.selectedComponents.includes('selectable-text')) { %>
       "react-native-uitextview": "^1.1.4",
-      <% } %>
       "react-native-pager-view": "6.3.0",
       <% if (props.stylingPackage?.options.selectedComponents.includes('date-picker')) { %>
         "@react-native-community/datetimepicker": "8.0.1",
-      <% } %>
-      <% if (props.stylingPackage?.options.selectedComponents.includes('segmented-control')) { %>
-        "@react-native-segmented-control/segmented-control": "2.5.2",
       <% } %>
       <% if (props.stylingPackage?.options.selectedComponents.includes('picker')) { %>
         "@react-native-picker/picker": "2.7.5",
@@ -56,12 +59,6 @@
       <% } %>
       <% if (props.stylingPackage?.options.selectedComponents.includes('action-sheet')) { %>
         "@expo/react-native-action-sheet": "^4.0.1",
-      <% } %>
-      <% if (props.stylingPackage?.options.selectedComponents.includes('context-menu') || props.stylingPackage?.options.selectedComponents.includes('dropdown-menu')) { %>
-        "zeego": "^1.9.1",
-        "react-native-ios-context-menu": "^2.5.0",
-        "react-native-ios-utilities": "^4.4.0",
-        "@react-native-menu/menu": "^1.0.3",
       <% } %>
       <% if (props.stylingPackage?.options.selectedComponents.includes('ratings-indicator')) { %>
         "expo-store-review": "~7.0.2",
@@ -139,12 +136,10 @@
 	<% if (props.authenticationPackage?.name === "supabase") { %>
 	    "@react-native-async-storage/async-storage": "1.21.0",
 		"@supabase/supabase-js": "^2.38.4",
-		"react-native-url-polyfill": "^2.0.0",
 	<% } %>
 
 	<% if (props.authenticationPackage?.name === "firebase") { %>
 	  "firebase": "^10.5.2",
-	  "react-native-url-polyfill": "^2.0.0",
 	<% } %>
   
   <% if (props.internalizationPackage?.name === "i18next") { %>
@@ -153,7 +148,8 @@
     "expo-localization": "~14.8.3",
   <% } %> 
   <% if (props.flags?.eas || props.stylingPackage?.name === "nativewindui") { %>
-    "expo-dev-client": "~4.0.14",      
+    "expo-dev-client": "~4.0.14",
+    "expo-dev-launcher": "^4.0.22",      
   <% } %>
 
     "expo": "^51.0.0",
@@ -183,7 +179,8 @@
     "typescript": "~5.3.3"
   },
   "eslintConfig": {
-    "extends": "universe/native"
+    "extends": "universe/native",
+    "root": true
   },
   <% if (props.navigationPackage?.name !== "expo-router") { %>
     "main": "node_modules/expo/AppEntry.js",

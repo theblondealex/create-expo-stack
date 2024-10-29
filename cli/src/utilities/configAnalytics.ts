@@ -1,6 +1,7 @@
 import { GoogleAuth } from 'google-auth-library';
 import { google } from 'googleapis';
 import {
+  Analytics,
   AuthenticationSelect,
   CliFlags,
   Internalization,
@@ -35,7 +36,8 @@ export async function storeConfigAnalytics({
   os,
   osPlatform,
   osArch,
-  osRelease
+  osRelease,
+  analytics
 }: {
   timestamp: string;
   cesVersion: string;
@@ -51,6 +53,7 @@ export async function storeConfigAnalytics({
   osPlatform: string;
   osArch: string;
   osRelease: string;
+  analytics: Analytics;
 } & Partial<CliFlags>) {
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     console.log('Skipping analytics in development or test environment');
@@ -65,7 +68,7 @@ export async function storeConfigAnalytics({
 
     const service = google.sheets({ version: 'v4', auth });
 
-    const result = await service.spreadsheets.values.append({
+    await service.spreadsheets.values.append({
       spreadsheetId: '1Nav_XXi8stJjaBBK8bX0CebRF5QKXU25BZc57I06yGQ',
       range: 'Sheet1!A:A',
       valueInputOption: 'RAW',
@@ -90,14 +93,13 @@ export async function storeConfigAnalytics({
             os ?? '',
             osPlatform ?? '',
             osArch ?? '',
-            osRelease ?? ''
+            osRelease ?? '',
+            analytics ?? ''
           ]
         ]
       },
       insertDataOption: 'INSERT_ROWS'
     });
-
-    console.log(`${result.data.updates.updatedCells} cells appended.`);
 
     // return result;
   } catch (err) {

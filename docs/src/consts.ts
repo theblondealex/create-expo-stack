@@ -20,11 +20,11 @@ export type KnownLanguageCode = keyof typeof KNOWN_LANGUAGES;
 
 export const TWITTER_URL = `https://twitter.com/danstepanov`;
 
-export const EDIT_URL = `https://github.com/danstepanov/create-expo-stack`;
+export const EDIT_URL = `https://github.com/roninoss/create-expo-stack`;
 
-export const COMMUNITY_INVITE_URL = `https://createexpostack.com/discord`;
+export const COMMUNITY_INVITE_URL = `https://rn.new/discord`;
 
-export const CREATE_EXPO_STACK_URL = `https://createexpostack.com/`;
+export const CREATE_EXPO_STACK_URL = `https://rn.new/`;
 
 // See "Algolia" section of the README for more information.
 export const ALGOLIA = {
@@ -33,7 +33,11 @@ export const ALGOLIA = {
   apiKey: "XXXXXXXXXX",
 };
 
-export type OuterHeaders = "Getting Started" | "Deployment" | "Usage";
+export type OuterHeaders =
+  | "Create Expo Stack"
+  | "Getting Started"
+  | "Deployment"
+  | "Usage";
 
 export interface SidebarItem<
   TCode extends KnownLanguageCode = KnownLanguageCode,
@@ -63,6 +67,7 @@ export const SIDEBAR_HEADER_MAP: Record<
   Record<OuterHeaders, string>
 > = {
   en: {
+    "Create Expo Stack": "Create Expo Stack",
     "Getting Started": "Create Expo Stack",
     Usage: "Usage",
     Deployment: "Deployment",

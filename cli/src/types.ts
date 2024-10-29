@@ -44,21 +44,18 @@ export type StateManagementSelect = 'zustand' | undefined;
 
 export type Internalization = 'i18next';
 
+export type Analytics = 'vexo-analytics';
+
 export type SelectedComponents =
   | 'action-sheet'
   | 'activity-indicator'
   | 'activity-view'
-  | 'alert'
   | 'avatar'
   | 'bottom-sheet'
-  | 'context-menu'
   | 'date-picker'
-  | 'dropdown-menu'
   | 'picker'
   | 'progress-indicator'
   | 'ratings-indicator'
-  | 'segmented-control'
-  | 'selectable-text'
   | 'slider'
   | 'text'
   | 'toggle';

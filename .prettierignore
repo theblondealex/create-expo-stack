@@ -4,6 +4,7 @@
 *.png
 *.ttf
 *.txt
+*.ico
 .editorconfig
 .env
 .gitignore
@@ -11,3 +12,4 @@
 .prettierignore
 bun.lockb
 LICENSE
+cli/__tests__/__snapshots__/*
